@@ -163,7 +163,7 @@ export class ExpensesService {
       .leftJoinAndSelect('expense.paidByMember', 'paidByMember')
       .leftJoinAndSelect('expense.splits', 'splits')
       .orderBy('expense.date', 'DESC')
-      .addOrderBy('expense.created_at', 'DESC')
+      .addOrderBy('expense.createdAt', 'DESC')
       .take(filters.limit ?? 20);
 
     if (filters.groupId) {

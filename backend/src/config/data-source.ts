@@ -3,7 +3,7 @@ import { DataSource } from 'typeorm';
 
 // DataSource para la CLI de TypeORM (migraciones y seed).
 // Los globs {ts,js} permiten usarlo tanto con ts-node (dev) como compilado (prod).
-export const AppDataSource = new DataSource({
+const AppDataSource = new DataSource({
   type: 'postgres',
   ...(process.env.DATABASE_URL
     ? { url: process.env.DATABASE_URL }

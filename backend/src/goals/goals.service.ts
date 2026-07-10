@@ -31,7 +31,7 @@ export class GoalsService {
       .leftJoinAndSelect('goal.group', 'group')
       .where('goal.owner_id = :userId', { userId })
       .orWhere(groupIds.length > 0 ? 'goal.group_id IN (:...groupIds)' : '1 = 0', { groupIds })
-      .orderBy('goal.created_at', 'ASC')
+      .orderBy('goal.createdAt', 'ASC')
       .getMany();
 
     return Promise.all(goals.map((goal) => this.withProgress(goal)));
