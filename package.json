@@ -1,0 +1,13 @@
+{
+  "name": "splitapp",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Gastos personales y compartidos en un solo lugar",
+  "scripts": {
+    "dev:backend": "npm run start:dev --prefix backend",
+    "dev:frontend": "npm run dev --prefix frontend",
+    "build": "npm run build --prefix backend && npm run build --prefix frontend",
+    "lint": "npm run lint --prefix backend && npm run lint --prefix frontend",
+    "test": "npm test --prefix backend"
+  }
+}
