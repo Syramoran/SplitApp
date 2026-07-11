@@ -8,8 +8,21 @@ async function bootstrap(): Promise<void> {
   const app = await NestFactory.create(AppModule);
 
   app.setGlobalPrefix('api');
+  const allowedOrigins = [
+    'http://localhost:5173',
+    ...(process.env.FRONTEND_URL
+      ? process.env.FRONTEND_URL.split(',').map((url) => url.trim().replace(/\/$/, ''))
+      : []),
+  ];
+
   app.enableCors({
-    origin: process.env.FRONTEND_URL ?? 'http://localhost:5173',
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin.replace(/\/$/, ''))) {
+        callback(null, true);
+      } else {
+        callback(null, false);
+      }
+    },
     credentials: true,
   });
   app.useGlobalPipes(
