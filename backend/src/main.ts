@@ -8,12 +8,9 @@ async function bootstrap(): Promise<void> {
   const app = await NestFactory.create(AppModule);
 
   app.setGlobalPrefix('api');
-  const allowedOrigins = [
-    'http://localhost:5173',
-    ...(process.env.FRONTEND_URL
-      ? process.env.FRONTEND_URL.split(',').map((url) => url.trim().replace(/\/$/, ''))
-      : []),
-  ];
+  const allowedOrigins = process.env.FRONTEND_URL
+    ? [process.env.FRONTEND_URL.replace(/\/$/, '')]
+    : [];
 
   app.enableCors({
     origin: (origin, callback) => {
