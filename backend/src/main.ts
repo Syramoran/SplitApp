@@ -8,18 +8,26 @@ async function bootstrap(): Promise<void> {
   const app = await NestFactory.create(AppModule);
 
   app.setGlobalPrefix('api');
-  const allowedOrigins = process.env.FRONTEND_URL
-    ? [process.env.FRONTEND_URL.replace(/\/$/, '')]
-    : [];
+  const allowedOrigins = (process.env.FRONTEND_URL ?? '')
+    .split(/[,;]/)
+    .map((url) => url.trim().replace(/^["']|["']$/g, '').replace(/\/$/, ''))
+    .filter(Boolean);
 
   app.enableCors({
     origin: (origin, callback) => {
-      if (!origin || allowedOrigins.includes(origin.replace(/\/$/, ''))) {
-        callback(null, true);
-      } else {
-        callback(null, false);
+      if (!origin) {
+        return callback(null, true);
       }
+      const normalizedOrigin = origin.trim().replace(/\/$/, '');
+      if (allowedOrigins.includes(normalizedOrigin)) {
+        return callback(null, true);
+      }
+      console.warn(
+        `[CORS] Rechazado origin: "${origin}" (Normalizado: "${normalizedOrigin}"). Orígenes permitidos en FRONTEND_URL: [${allowedOrigins.map((o) => `"${o}"`).join(', ')}]`,
+      );
+      return callback(null, false);
     },
+    methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE', 'OPTIONS'],
     credentials: true,
   });
   app.useGlobalPipes(
