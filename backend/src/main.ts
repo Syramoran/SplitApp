@@ -42,8 +42,9 @@ async function bootstrap(): Promise<void> {
     .addBearerAuth()
     .build();
   SwaggerModule.setup('api/docs', app, SwaggerModule.createDocument(app, swaggerConfig));
-
-  await app.listen(Number(process.env.PORT ?? 3000));
+  const port = process.env.PORT ? Number(process.env.PORT) : 3000;
+  await app.listen(port, '0.0.0.0');
+  console.log(`🚀 SplitApp API escuchando en: http://0.0.0.0:${port}/api`);
 }
 
 void bootstrap();
